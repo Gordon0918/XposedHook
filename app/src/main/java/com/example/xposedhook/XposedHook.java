@@ -56,7 +56,10 @@ public class XposedHook implements IXposedHookLoadPackage {
             //    }
             //});
 
-            //Hook公有方法publicFunc，修改参数，顺便修改下publicInt和privateInt的值，再顺便调用一下隐藏函数hideFunc
+            //Hook公有方法publicFunc，
+            // 1、修改参数
+            // 2、修改下publicInt和privateInt的值
+            // 3、再顺便调用一下隐藏函数hideFunc
             //XposedHelpers.findAndHookMethod("com.example.xposedhooktarget.HookDemo", clazz.getClassLoader(), "publicFunc", String.class, new XC_MethodHook()
             XposedHelpers.findAndHookMethod(clazz, "publicFunc", String.class, new XC_MethodHook() {
                 @Override
