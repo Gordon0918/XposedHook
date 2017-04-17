@@ -73,7 +73,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                     //md.invoke(param.thisObject, "Haha, hideFunc was hooked");
                     XposedHelpers.callMethod(param.thisObject, "hideFunc", "Haha, hideFunc was hooked");
 
-                    //新建实例，然后再调用HideFunc方法
+                    //实例化对象，然后再调用HideFunc方法
                     //Constructor constructor = clazz.getConstructor();
                     //XposedHelpers.callMethod(constructor.newInstance(), "hideFunc", "Haha, hideFunc was hooked");
                 }
