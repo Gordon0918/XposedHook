@@ -87,6 +87,17 @@ public class XposedHook implements IXposedHookLoadPackage {
                     param.args[0] = "Haha, privateFunc are hooked";
                 }
             });
+            
+             //Hook复杂参数函数complexParameterFunc
+            Class fclass1 = XposedHelpers.findClass("java.util.Map", loadPackageParam.classLoader);
+            Class fclass2 = XposedHelpers.findClass("java.util.ArrayList", loadPackageParam.classLoader);
+            XposedHelpers.findAndHookMethod(clazz, "complexParameterFunc", String.class,
+                    "[[Ljava.lang.String;", fclass1, fclass2, new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            param.args[0] = "Haha, complexParameterFunc are hooked";
+                        }
+                    });
 
             //Hook私有方法repleaceFunc, 替换打印内容
             XposedHelpers.findAndHookMethod(clazz, "repleaceFunc", new XC_MethodReplacement() {
