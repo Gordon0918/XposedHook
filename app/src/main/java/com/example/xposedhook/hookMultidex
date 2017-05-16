@@ -1,0 +1,57 @@
+package com.wandoujia.wdjxposed;
+
+import android.app.Application;
+import android.content.Context;
+import android.util.Log;
+
+import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
+
+/**
+ * Created by xlzh on 2017/5/15.
+ */
+
+public class Main implements IXposedHookLoadPackage{
+
+    @Override
+    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
+
+        if (loadPackageParam.packageName.equals("com.wandoujia.phoenix2")) {
+            XposedHelpers.findAndHookMethod("android.app.Application", loadPackageParam.classLoader,
+                    "attach",
+                    Context.class,
+                    new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            Context context = (Context) param.args[0];
+                            hookMultiClound(context.getClassLoader());
+                        }
+                    });
+        }
+    }
+
+    private void hookMultiClound(ClassLoader classLoader){
+        Class<?> hookclass;
+        try {
+            hookclass = classLoader.loadClass("com.wandoujia.wa.a");
+        }catch (Exception e){
+            XposedBridge.log("XLZH find com.wandoujia.wa.a error\n");
+            return;
+        }
+        XposedHelpers.findAndHookMethod(hookclass, "a", String.class, byte[].class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+
+                String postData = new String((byte[])param.args[1]);
+
+                XposedBridge.log("XLZH url " + param.args[0].toString());
+                XposedBridge.log("XLZH post " + postData);
+
+                super.beforeHookedMethod(param);
+            }
+        });
+    }
+}
